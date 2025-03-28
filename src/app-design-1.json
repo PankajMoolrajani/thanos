@@ -1,0 +1,100 @@
+{
+  "components": [
+    {
+      "id": "app-server",
+      "type": "ec2",
+      "name": "App Server",
+      "metadata": {
+        "environment": "prod",
+        "region": "us-west-2"
+      },
+      "assets": [
+        {
+          "id": "app-server-1",
+          "type": "ec2",
+          "name": "App Server 1"
+        }
+      ],
+      "security_controls": {
+        "iam_role": "AppServerRole",
+        "security_group": "sg-allow-app-traffic",
+        "encryption": {
+          "ebs": "enabled"
+        }
+      }
+    },
+    {
+      "id": "backend-api",
+      "type": "service",
+      "name": "Backend API",
+      "security_controls": {
+        "iam_role": "BackendAPIRole",
+        "logging": "enabled",
+        "mfa_required": false
+      }
+    },
+    {
+      "id": "db",
+      "type": "rds",
+      "name": "PostgreSQL DB",
+      "security_controls": {
+        "iam_auth": true,
+        "storage_encryption": true,
+        "public_access": false
+      }
+    },
+    {
+      "id": "secrets-store",
+      "type": "secret",
+      "name": "Secrets Manager",
+      "security_controls": {
+        "rotation_enabled": true,
+        "kms_key": "alias/prod-kms"
+      }
+    },
+    {
+      "id": "iam-role-api",
+      "type": "iam-role",
+      "name": "Backend API Role",
+      "security_controls": {
+        "policies": [
+          "ReadOnlyAccess",
+          "SecretsManagerReadWrite"
+        ]
+      }
+    }
+  ],
+  "connections": [
+    {
+      "source": "app-server",
+      "target": "backend-api",
+      "description": "App Server calls the Backend API",
+      "security_controls": {
+        "protocol": "HTTPS",
+        "auth": "IAM",
+        "tls": "enabled"
+      }
+    },
+    {
+      "source": "backend-api",
+      "target": "db",
+      "description": "Backend API queries the database",
+      "security_controls": {
+        "protocol": "TCP",
+        "port": 5432,
+        "tls": "enabled",
+        "iam_auth": true
+      }
+    },
+    {
+      "source": "backend-api",
+      "target": "secrets-store",
+      "description": "Backend API reads DB credentials",
+      "security_controls": {
+        "protocol": "HTTPS",
+        "auth": "IAM Role",
+        "iam_role": "iam-role-api"
+      }
+    }
+  ]
+}

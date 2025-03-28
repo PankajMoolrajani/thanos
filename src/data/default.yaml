@@ -1,0 +1,66 @@
+nodes:
+  - kind: component_type
+    id: ec2_instance
+    name: EC2 Instance
+    category: compute
+    provider: aws
+  - kind: component_type
+    id: s3_bucket
+    name: S3 Bucket
+    category: file_storage
+    provider: aws 
+  - kind: component_type
+    id: webapp
+    name: Web App
+    category: custom_app
+    provider: default
+  - kind: component_type
+    id: 3rd_party_api
+    name: 3rd Party API
+    category: 3rd_party_api
+    provider: 3rd_party
+  - kind: controls_collection
+    id: gdpr_compliance
+    name: GDPR Compliance
+    category: compliance
+    provider: default
+  - kind: controls_collection
+    id: security_best_practices
+    name: Security Best Practices
+    category: security
+    provider: default
+  - kind: control
+    id: s3_bucket_encryption
+    question: Is the S3 bucket encrypted?
+    name: S3 Bucket Encryption
+    provider: default
+  - kind: control
+    id: data_localization
+    question: Is the data localized?
+    name: Data Localization
+    provider: default
+  - kind: control
+    id: right_to_be_forgotten
+    question: Is the right to be forgotten implemented?
+    name: Right to be Forgotten
+    provider: default
+  - kind: control
+    id: data_retention
+    question: Is the data retention policy implemented?
+    name: Data Retention
+    provider: default
+  - kind: control
+    id: access_logging
+    question: Are access logs available?
+    name: Access Logging
+    provider: default
+  - kind: control
+    id: audit_logging
+    question: Are audit logs available?
+    name: Audit Logging
+    provider: default
+ 
+    
+    
+    
+    

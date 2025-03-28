@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Architecture Components</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .section-header {
+            margin-top: 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Architecture Design Components</h1>
+    
+    <div class="section-header">Components</div>
+    <table id="components-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Type</th>
+                <th>Name</th>
+                <th>Control Type</th>
+                <th>Control Value</th>
+            </tr>
+        </thead>
+        <tbody id="components-body"></tbody>
+    </table>
+
+    <div class="section-header">Connections</div>
+    <table id="connections-table">
+        <thead>
+            <tr>
+                <th>Source</th>
+                <th>Target</th>
+                <th>Description</th>
+                <th>Control Type</th>
+                <th>Control Value</th>
+            </tr>
+        </thead>
+        <tbody id="connections-body"></tbody>
+    </table>
+
+    <script>
+        // Store the JSON data directly in a variable
+        const architectureData = {
+            "components": [
+                {
+                    "id": "app-server",
+                    "type": "ec2",
+                    "name": "App Server",
+                    "metadata": {
+                        "environment": "prod",
+                        "region": "us-west-2"
+                    },
+                    "assets": [
+                        {
+                            "id": "app-server-1",
+                            "type": "ec2",
+                            "name": "App Server 1"
+                        }
+                    ],
+                    "security_controls": {
+                        "iam_role": "AppServerRole",
+                        "security_group": "sg-allow-app-traffic",
+                        "encryption": {
+                            "ebs": "enabled"
+                        }
+                    }
+                },
+                {
+                    "id": "backend-api",
+                    "type": "service",
+                    "name": "Backend API",
+                    "security_controls": {
+                        "iam_role": "BackendAPIRole",
+                        "logging": "enabled",
+                        "mfa_required": false
+                    }
+                },
+                {
+                    "id": "db",
+                    "type": "rds",
+                    "name": "PostgreSQL DB",
+                    "security_controls": {
+                        "iam_auth": true,
+                        "storage_encryption": true,
+                        "public_access": false
+                    }
+                },
+                {
+                    "id": "secrets-store",
+                    "type": "secret",
+                    "name": "Secrets Manager",
+                    "security_controls": {
+                        "rotation_enabled": true,
+                        "kms_key": "alias/prod-kms"
+                    }
+                },
+                {
+                    "id": "iam-role-api",
+                    "type": "iam-role",
+                    "name": "Backend API Role",
+                    "security_controls": {
+                        "policies": [
+                            "ReadOnlyAccess",
+                            "SecretsManagerReadWrite"
+                        ]
+                    }
+                }
+            ],
+            "connections": [
+                {
+                    "source": "app-server",
+                    "target": "backend-api",
+                    "description": "App Server calls the Backend API",
+                    "security_controls": {
+                        "protocol": "HTTPS",
+                        "auth": "IAM",
+                        "tls": "enabled"
+                    }
+                },
+                {
+                    "source": "backend-api",
+                    "target": "db",
+                    "description": "Backend API queries the database",
+                    "security_controls": {
+                        "protocol": "TCP",
+                        "port": 5432,
+                        "tls": "enabled",
+                        "iam_auth": true
+                    }
+                },
+                {
+                    "source": "backend-api",
+                    "target": "secrets-store",
+                    "description": "Backend API reads DB credentials",
+                    "security_controls": {
+                        "protocol": "HTTPS",
+                        "auth": "IAM Role",
+                        "iam_role": "iam-role-api"
+                    }
+                }
+            ]
+        };
+
+        // Function to flatten security controls into array of {type, value} pairs
+        function flattenControls(controls) {
+            const flattened = [];
+            
+            function flatten(obj, prefix = '') {
+                for (const [key, value] of Object.entries(obj)) {
+                    if (value !== null && typeof value === 'object' && !Array.isArray(value)) {
+                        flatten(value, `${prefix}${key}.`);
+                    } else {
+                        flattened.push({
+                            type: prefix + key,
+                            value: Array.isArray(value) ? value.join(', ') : value.toString()
+                        });
+                    }
+                }
+            }
+            
+            flatten(controls);
+            return flattened;
+        }
+
+        // Use the data directly instead of fetching
+        const componentsBody = document.getElementById('components-body');
+        architectureData.components.forEach(comp => {
+            const controls = flattenControls(comp.security_controls);
+            controls.forEach((control, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index === 0 ? comp.id : ''}</td>
+                    <td>${index === 0 ? comp.type : ''}</td>
+                    <td>${index === 0 ? comp.name : ''}</td>
+                    <td>${control.type}</td>
+                    <td>${control.value}</td>
+                `;
+                componentsBody.appendChild(row);
+            });
+        });
+
+        const connectionsBody = document.getElementById('connections-body');
+        architectureData.connections.forEach(conn => {
+            const controls = flattenControls(conn.security_controls);
+            controls.forEach((control, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index === 0 ? conn.source : ''}</td>
+                    <td>${index === 0 ? conn.target : ''}</td>
+                    <td>${index === 0 ? conn.description : ''}</td>
+                    <td>${control.type}</td>
+                    <td>${control.value}</td>
+                `;
+                connectionsBody.appendChild(row);
+            });
+        });
+    </script>
+</body>
+</html>
