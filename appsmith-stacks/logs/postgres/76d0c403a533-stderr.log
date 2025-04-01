@@ -1,0 +1,27 @@
+2025-03-30 14:08:58.833 UTC [1934] LOG:  starting PostgreSQL 14.15 (Ubuntu 14.15-1.pgdg20.04+1) on aarch64-unknown-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0, 64-bit
+2025-03-30 14:08:58.833 UTC [1934] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-03-30 14:08:58.838 UTC [1934] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-03-30 14:08:58.866 UTC [1982] LOG:  database system was shut down at 2025-03-30 14:08:58 UTC
+2025-03-30 14:08:58.894 UTC [1934] LOG:  database system is ready to accept connections
+2025-03-30 14:58:00.947 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-30 15:06:01.266 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-30 15:26:02.233 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-30 15:30:02.393 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-30 15:51:03.419 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-30 16:20:31.653 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-30 16:41:32.531 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-30 16:51:33.006 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-30 17:29:34.731 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-30 18:29:37.303 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-30 18:50:38.246 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-30 20:35:17.202 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-30 20:42:17.549 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-30 22:31:08.137 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-31 00:26:23.087 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-31 01:14:14.757 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-31 01:22:15.037 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-31 15:33:35.620 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-31 17:01:35.436 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-31 22:26:50.626 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-03-31 23:31:53.153 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-04-01 02:08:09.770 UTC [1987] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted

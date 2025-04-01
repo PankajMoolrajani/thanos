@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  thanos:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+    container_name: thanos
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "8501:8501"
+
+  # appsmith:
+  #   image: appsmith/appsmith-ce
+  #   container_name: appsmith
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #     - "9001:9001"
+  #   volumes:
+  #     - ./appsmith-stacks:/appsmith-stacks
+  #   restart: unless-stopped
+  #   # Default credentials:
+  #   # username: admin@example.com
+  #   # password: password

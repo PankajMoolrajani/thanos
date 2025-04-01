@@ -1,0 +1,17 @@
+nodes:
+  - kind: threat_model
+    id: customer_call_recordings
+    name: Customer Call Recordings
+    description: Threat Model of Customer Call Recordings Workflow. This workflow includes multiple internal tools like salesloft, genesys, salesforce etc.
+  - kind: component
+    id: salesforce
+    name: Salesforce
+    component_type_id: saas
+  - kind: component
+    id: salesloft
+    name: SalesLoft
+    component_type_id: saas
+  - kind: component
+    id: genesys
+    name: Genesys
+    component_type_id: saas

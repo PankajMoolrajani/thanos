@@ -5,6 +5,11 @@ nodes:
     category: compute
     provider: aws
   - kind: component_type
+    id: saas
+    name: SaaS Application
+    category: saas
+    provider: 3rd_party
+  - kind: component_type
     id: s3_bucket
     name: S3 Bucket
     category: file_storage
