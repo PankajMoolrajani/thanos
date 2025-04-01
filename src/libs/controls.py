@@ -3,9 +3,9 @@ from pathlib import Path
 sys.path.append('/app/src')
 
 from libs.db import Database
-from schema import ThreatModel, Control, Component, ComponentType, ThreatModelComponent, ControlCondition
+from schema import *
 
-def get_control_conditions_by_component_type(component_type_id: str):
+def get_controls_by_component_type_old(component_type_id: str):
     db = Database()
     session = db.get_session()
     print (f"Getting control conditions for component type {component_type_id}")
@@ -15,6 +15,46 @@ def get_control_conditions_by_component_type(component_type_id: str):
         ControlCondition.ob_value == component_type_id
     ).all()
     return control_conditions
+
+def get_controls_by_component_type(component_type_id: str):
+    print (f"Getting control conditions for component type {component_type_id}")
+    db = Database()
+    session = db.get_session()
+        # Get control rules that use these conditions
+    control_rules = session.query(ControlRule)\
+        .join(ControlRuleCondition)\
+        .join(ControlCondition)\
+        .filter(
+            ControlCondition.ob_type == 'component_type',
+            ControlCondition.ob_key == 'id',
+            ControlCondition.ob_value == component_type_id
+        ).distinct().all()
+    print (f"Found {len(control_rules)} control rules")
+    # Get all controls associated with these control rules
+    controls = []
+    for rule in control_rules:
+        rule_controls = session.query(Control)\
+            .join(ControlRuleControl)\
+            .filter(ControlRuleControl.control_rule_id == rule.id)\
+            .all()
+        controls.extend(rule_controls)
+    print (f"Found {len(controls)} controls")
+    return controls
+
+def get_component_controls(component_id: str):
+    db = Database()
+    session = db.get_session()
+    component = session.query(Component).filter(Component.id == component_id).first()
+    controls = get_controls_by_component_type(component.component_type_id)
+    return controls
+
+def update_component_control_status(component_id: str, control_id: str, is_enforced: bool, details: str):
+    db = Database()
+    session = db.get_session()
+    component = session.query(Component).filter(Component.id == component_id).first()
+    control = session.query(Control).filter(Control.id == control_id).first()
+    component.control_values.append(ComponentControlValue(control=control, is_enforced=is_enforced, details=details))
+    session.commit()
 
 def main():
     print ("Get list of controls")
@@ -27,10 +67,11 @@ def main():
     for tm_component in tm_components:
         print (tm_component.component_id)
         component = session.query(Component).filter(Component.id == tm_component.component_id).first()
-        print (component.name)
       
-        control_conditions = get_control_conditions_by_component_type(component.component_type_id)
-        print (control_conditions)
+        control_rules, controls = get_controls_by_component_type(component.component_type_id)
+        print (controls)
+        for control in controls:
+            print (control.name)
     
 
 

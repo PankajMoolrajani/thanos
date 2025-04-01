@@ -694,3 +694,7 @@ No permissionGroup data to migrate.
 [2025-04-01 02:05:13,725] [lettuce-nioEventLoop-10-1] requestId= userEmail= traceId= spanId= - Cache entry evicted for key organizationNewFeatures:67e9508bb133fa05e2f8c94d
 [2025-04-01 02:05:13,728] [lettuce-nioEventLoop-10-1] requestId= userEmail= traceId= spanId= - Cache miss for key organizationNewFeatures:67e9508bb133fa05e2f8c94d
 [2025-04-01 02:05:14,168] [reactor-http-nio-3] requestId= userEmail= traceId= spanId= - Cache entry added for key organizationNewFeatures:67e9508bb133fa05e2f8c94d
+[2025-04-01 02:41:28,170] [scheduling-1] requestId= userEmail= traceId= spanId= - Acquired lock for: lock:fetchFeatures
+[2025-04-01 02:41:28,176] [scheduling-1] requestId= userEmail= traceId=e9e81c1c19c987318b06b749b0dccb9d spanId=fa6e336ca69b56e8 - Fetching features for organizations
+[2025-04-01 03:11:28,081] [scheduling-1] requestId= userEmail= traceId= spanId= - Acquired lock for: lock:fetchFeatures
+[2025-04-01 03:11:28,082] [scheduling-1] requestId= userEmail= traceId=7023f76c43e320e1eef06ea4879fc316 spanId=859106a3ad1be233 - Fetching features for organizations

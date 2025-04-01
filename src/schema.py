@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, String, ForeignKey
+from sqlalchemy import create_engine, Column, String, ForeignKey, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 import uuid
@@ -24,6 +24,7 @@ class Component(Base):
 
     component_type = relationship("ComponentType", back_populates="components")
     threat_model_components = relationship("ThreatModelComponent", back_populates="component")
+    control_values = relationship("ComponentControlValue", back_populates="component")
 
 class ControlsCollection(Base):
     __tablename__ = 'controls_collections'
@@ -52,6 +53,7 @@ class Control(Base):
 
     controls_collections_controls = relationship("ControlsCollectionsControls", back_populates="control")
     rule_controls = relationship("ControlRuleControl", back_populates="control")
+    control_values = relationship("ComponentControlValue", back_populates="control")
 
 class ControlCondition(Base):
     __tablename__ = 'control_conditions'
@@ -91,6 +93,18 @@ class ControlRuleControl(Base):
 
     control_rule = relationship("ControlRule", back_populates="rule_controls")
     control = relationship("Control", back_populates="rule_controls")
+
+class ComponentControlValue(Base):
+    __tablename__ = 'component_control_values'
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    component_id = Column(String(36), ForeignKey('components.id'), nullable=False)
+    control_id = Column(String(36), ForeignKey('controls.id'), nullable=False)
+    is_enforced = Column(Boolean, nullable=False, default=False)
+    details = Column(String, nullable=False)
+
+    component = relationship("Component", back_populates="control_values")
+    control = relationship("Control", back_populates="control_values")
 
 class ThreatModel(Base):
     __tablename__ = 'threat_models'
