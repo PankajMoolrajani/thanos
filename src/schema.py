@@ -97,7 +97,7 @@ class ControlRuleControl(Base):
 class ComponentControlValue(Base):
     __tablename__ = 'component_control_values'
 
-    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    id = Column(String(36), primary_key=True)
     component_id = Column(String(36), ForeignKey('components.id'), nullable=False)
     control_id = Column(String(36), ForeignKey('controls.id'), nullable=False)
     is_enforced = Column(Boolean, nullable=False, default=False)

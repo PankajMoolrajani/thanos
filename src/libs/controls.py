@@ -56,6 +56,21 @@ def update_component_control_status(component_id: str, control_id: str, is_enfor
     component.control_values.append(ComponentControlValue(control=control, is_enforced=is_enforced, details=details))
     session.commit()
 
+def get_control_value(component_id: str, control_id: str):
+    print (f"Getting control value for component {component_id} and control {control_id}")
+    db = Database()
+    session = db.get_session()
+    try: 
+        control_value = session.query(ComponentControlValue).first()
+        if not control_value:
+            print ("No control value found")
+        else:
+            return control_value
+    except Exception as e:
+        print (f"Error getting control value: {e}")
+    
+    
+
 def main():
     print ("Get list of controls")
     db = Database()

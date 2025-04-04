@@ -1,0 +1,16 @@
+2025-04-03 14:41:44.059 UTC [2098] LOG:  starting PostgreSQL 14.15 (Ubuntu 14.15-1.pgdg20.04+1) on aarch64-unknown-linux-gnu, compiled by gcc (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0, 64-bit
+2025-04-03 14:41:44.059 UTC [2098] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2025-04-03 14:41:44.063 UTC [2098] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+2025-04-03 14:41:44.089 UTC [2134] LOG:  database system was shut down at 2025-04-03 14:41:42 UTC
+2025-04-03 14:41:44.113 UTC [2098] LOG:  database system is ready to accept connections
+2025-04-03 14:55:44.849 UTC [2139] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-04-03 15:24:46.111 UTC [2139] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-04-03 15:41:46.846 UTC [2139] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-04-03 16:20:48.480 UTC [2139] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-04-03 21:04:29.433 UTC [2139] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-04-03 22:08:56.617 UTC [2139] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-04-03 22:27:57.384 UTC [14070] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-04-04 02:38:59.447 UTC [2139] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-04-04 03:00:00.283 UTC [2139] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-04-04 03:02:00.350 UTC [2139] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
+2025-04-04 03:54:12.110 UTC [2139] WARNING:  could not open statistics file "pg_stat_tmp/global.stat": Operation not permitted
