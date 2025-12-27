@@ -1,0 +1,231 @@
+  nodes: 
+    # Resource Types
+    - id: plaid_api
+      labels: 
+        name: Plaid API
+      properties:
+        kind: resource_type
+        id: plaid_api
+        name: Plaid API
+        provider: plaid
+
+    - id: generic_api_service
+      labels: 
+        name: Generic API Service
+      properties:
+        kind: resource_type
+        id: generic_api_service
+        name: Generic API Service
+        provider: generic
+        config_publicly_accessible: 
+          type: boolean
+          default: true
+
+    - id: generic_secret_store
+      labels: 
+        name: Generic Secret Store
+      properties:
+        kind: resource_type
+        id: generic_secret_store
+        name: Generic Secret Store
+        provider: generic
+  
+    - id: generic_file_storage
+      labels: 
+        name: Generic File Storage
+      properties:
+        kind: resource_type
+        id: generic_file_storage
+        name: Generic File Storage
+        provider: generic
+
+    - id: generic_api_gateway
+      labels: 
+        name: Generic API Gateway
+      properties:
+        kind: resource_type
+        id: generic_api_gateway
+        name: Generic API Gateway
+        provider: generic
+
+    - id: aws_s3_bucket
+      labels: 
+        name: AWS S3 Bucket
+      properties:
+        kind: resource_type
+        id: aws_s3_bucket
+        name: AWS S3 Bucket
+        provider: aws
+
+    - id: aws_ec2_instance
+      labels: 
+        name: AWS EC2 Instance
+      properties:
+        kind: resource_type
+        id: aws_ec2_instance
+        name: AWS EC2 Instance
+        provider: aws
+
+  # Resources
+    - id: plaid_accounts_api
+      labels: 
+        name: Plaid Accounts API
+      properties:
+        kind: resource
+        id: plaid_accounts_api
+        name: Plaid Accounts API
+        resource_type_id: plaid_api
+        provider: plaid
+
+    - id: cards_issuer_api
+      labels: 
+        name: Cards Issuer API
+      properties:
+        kind: resource
+        id: cards_issuer_api
+        name: Cards Issuer API
+        resource_type_id: generic_api_service
+        config_publicly_accessible: true
+
+    # Controls
+    - id: db_user_authentication
+      labels: 
+        name: DB User Authentication
+      properties:
+        kind: control
+        id: db_user_authentication
+        name: DB User Authentication
+        category: authentication
+
+    - id: db_user_authorization
+      labels: 
+        name: DB User Authorization
+      properties:
+        kind: control
+        id: db_user_authorization
+        name: DB User Authorization
+        category: authorization
+
+    - id: encrypt_data_at_rest
+      labels: 
+        name: Encrypt Data at Rest
+      properties:
+        kind: control
+        id: encrypt_data_at_rest
+        name: Encrypt Data at Rest
+        category: encryption
+
+    - id: encrypt_data_in_transit
+      labels: 
+        name: Encrypt Data in Transit
+      properties:
+        kind: control
+        id: encrypt_data_in_transit
+        name: Encrypt Data in Transit
+        category: encryption
+    
+    - id: api_authentication
+      labels: 
+        name: API Authentication
+      properties:
+        kind: control
+        id: api_authentication
+        name: API Authentication
+        category: authentication
+
+    - id: api_authorization
+      labels: 
+        name: API Authorization
+      properties:
+        kind: control
+        id: api_authorization
+        name: API Authorization
+        category: authorization
+
+    # Control Conditions
+    - id: resource_type_is_generic_api_service
+      labels: 
+        name: Resource Type is Generic API Service
+      properties:
+        kind: control_condition
+        id: resource_type_is_generic_api_service
+        name: Resource Type is Generic API Service
+        node.type: resource
+        node.relation.of_type: generic_api_service
+
+    - id: generic_api_publicly_accessible
+      labels: 
+        name: Generic API is Publicly Accessible
+      properties:
+        kind: control_condition
+        id: generic_api_publicly_accessible
+        name: Generic API is Publicly Accessible
+        node.type: resource
+        node.relation.of_type: generic_api_service
+
+    # Control Rules
+    - id: generic_api_publicly_accessible_rule
+      labels: 
+        name: Generic API is Publicly Accessible Rule
+      properties:
+        kind: control_rule
+        id: generic_api_publicly_accessible_rule
+        name: Generic API is Publicly Accessible Rule
+       
+
+
+
+
+  relationships:
+    - id: plaid_accounts_api_to_cards_issuer_api
+      labels: 
+        name: Plaid Accounts API to Cards Issuer API
+      properties:
+        relation_type: talks_to
+      source_node_type: resource
+      source_node_id: plaid_accounts_api
+      target_node_type: resource
+      target_node_id: cards_issuer_api
+
+
+
+
+    - id: generic_api_publicly_accessible_rule_has_generic_api_publicly_accessible_condition
+      labels:
+        name: Generic API Publicly Accessible Rule has Generic API Publicly Accessible Condition
+      properties:
+        relation_type: has_control_condition
+      source_node_type: control_rule
+      source_node_id: generic_api_publicly_accessible_rule
+      target_node_type: control_condition
+      target_node_id: generic_api_publicly_accessible_condition
+
+    - id: generic_api_publicly_accessible_has_resource_type_is_generic_api_service_condition
+      labels:
+        name: Generic API Publicly Accessible has Resource Type is Generic API Service Condition
+      properties:
+        relation_type: has_control_condition
+      source_node_type: control_condition
+      source_node_id: generic_api_publicly_accessible_condition
+      target_node_type: control_condition
+      target_node_id: resource_type_is_generic_api_service_condition
+
+    - id: generic_api_publicly_accessible_enforces_api_authentication
+      labels:
+        name: Generic API Publicly Accessible enforces API Authentication
+      properties:
+        relation_type: enforces_control
+      source_node_type: control_rule
+      source_node_id: generic_api_publicly_accessible_rule
+      target_node_type: control
+      target_node_id: api_authentication
+
+    - id: generic_api_publicly_accessible_enforces_api_authorization
+      labels:
+        name: Generic API Publicly Accessible enforces API Authorization
+      properties:
+        relation_type: enforces_control
+      source_node_type: control_rule
+      source_node_id: generic_api_publicly_accessible_rule
+      target_node_type: control
+      target_node_id: api_authorization
