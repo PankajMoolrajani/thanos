@@ -1,29 +1,30 @@
   nodes: 
     # Resource Types
-    - id: plaid_api
-      labels: 
-        name: Plaid API
-      properties:
-        kind: resource_type
-        id: plaid_api
-        name: Plaid API
-        provider: plaid
-
     - id: generic_api_service
       labels: 
-        name: Generic API Service
+        - ResourceType
+        - GenericAPIService
       properties:
         kind: resource_type
         id: generic_api_service
         name: Generic API Service
         provider: generic
-        config_publicly_accessible: 
-          type: boolean
-          default: true
+        config_publicly_accessible: TYPE_BOOLEAN
+
+    - id: generic_database
+      labels: 
+        - ResourceType
+        - GenericDatabase
+      properties:
+        kind: resource_type
+        id: generic_database
+        name: Generic Database
+        provider: generic
 
     - id: generic_secret_store
       labels: 
-        name: Generic Secret Store
+        - ResourceType
+        - GenericSecretStore
       properties:
         kind: resource_type
         id: generic_secret_store
@@ -32,7 +33,8 @@
   
     - id: generic_file_storage
       labels: 
-        name: Generic File Storage
+        - ResourceType
+        - GenericFileStorage
       properties:
         kind: resource_type
         id: generic_file_storage
@@ -41,74 +43,324 @@
 
     - id: generic_api_gateway
       labels: 
-        name: Generic API Gateway
+        - ResourceType
+        - GenericAPIGateway
       properties:
         kind: resource_type
         id: generic_api_gateway
         name: Generic API Gateway
         provider: generic
 
-    - id: aws_s3_bucket
+    # Assets
+    - id: customer_pii
       labels: 
-        name: AWS S3 Bucket
+        - Asset
+        - CustomerPII
       properties:
-        kind: resource_type
-        id: aws_s3_bucket
-        name: AWS S3 Bucket
-        provider: aws
+        kind: asset
+        id: customer_pii
+        name: Customer PII
+        description: Customer PII
+    
+    - id: customer_financial_data
+      labels: 
+        - Asset
+        - CustomerFinancialData
+      properties:
+        kind: asset
+        id: customer_financial_data
+        name: Customer Financial Data
+        description: Customer Financial Data
 
-    - id: aws_ec2_instance
+    - id: credentials
       labels: 
-        name: AWS EC2 Instance
+        - Asset
+        - Credentials
       properties:
-        kind: resource_type
-        id: aws_ec2_instance
-        name: AWS EC2 Instance
-        provider: aws
+        kind: asset
+        id: credentials
+        name: Credentials
+        description: Credentials
+      
+    - id: intellectual_property
+      labels: 
+        - Asset
+        - IntellectualProperty
+      properties:
+        kind: asset
+        id: intellectual_property
+        name: Intellectual Property
+        description: Intellectual Property
 
-  # Resources
-    - id: plaid_accounts_api
+    # Actors
+    - id: external_actor
       labels: 
-        name: Plaid Accounts API
+        - Actor
+        - ExternalActor
       properties:
-        kind: resource
-        id: plaid_accounts_api
-        name: Plaid Accounts API
-        resource_type_id: plaid_api
-        provider: plaid
+        kind: actor
+        id: external_actor
+        name: External Actor
+        description: External Actor
 
-    - id: cards_issuer_api
+    - id: internal_actor
       labels: 
-        name: Cards Issuer API
+        - Actor
+        - InternalActor
       properties:
-        kind: resource
-        id: cards_issuer_api
-        name: Cards Issuer API
-        resource_type_id: generic_api_service
-        config_publicly_accessible: true
+        kind: actor
+        id: internal_actor
+        name: Internal Actor
+        description: Internal Actor
+
+    # Threat Categories
+    - id: spoofing
+      labels: 
+        - ThreatCategory
+        - Spoofing
+      properties:
+        kind: threat_category
+        id: spoofing
+        name: Spoofing
+        description: Spoofing
+        
+    - id: tampering
+      labels: 
+        - ThreatCategory
+        - Tampering
+      properties:
+        kind: threat_category
+        id: tampering
+        name: Tampering
+        description: Tampering
+
+    - id: repudiation
+      labels: 
+        - ThreatCategory
+        - Repudiation
+      properties:
+        kind: threat_category
+        id: repudiation
+        name: Repudiation
+        description: Repudiation
+
+    - id: information_disclosure
+      labels: 
+        - ThreatCategory
+        - InformationDisclosure
+      properties:
+        kind: threat_category
+        id: information_disclosure
+        name: Information Disclosure
+        description: Information Disclosure
+
+    - id: denial_of_service
+      labels: 
+        - ThreatCategory
+        - DenialOfService
+      properties:
+        kind: threat_category
+        id: denial_of_service
+        name: Denial of Service
+        description: Denial of Service
+
+    - id: elevation_of_privilege
+      labels: 
+        - ThreatCategory
+        - ElevationOfPrivilege
+      properties:
+        kind: threat_category
+        id: elevation_of_privilege
+        name: Elevation of Privilege
+        description: Elevation of Privilege
+
+    # Threats
+    - id: credential_theft
+      labels:
+        - Threat
+        - CredentialTheft
+      properties:
+        kind: threat
+        id: credential_theft
+        name: Credential Theft
+        description: Theft of passwords, API keys, or tokens to impersonate identities
+
+    - id: session_hijacking
+      labels:
+        - Threat
+        - SessionHijacking
+      properties:
+        kind: threat
+        id: session_hijacking
+        name: Session Hijacking
+        description: Reuse of a valid session identifier to impersonate a user
+
+    - id: service_identity_spoofing
+      labels:
+        - Threat
+        - ServiceIdentitySpoofing
+      properties:
+        kind: threat
+        id: service_identity_spoofing
+        name: Service Identity Spoofing
+        description: A service impersonates another service due to weak authentication
+
+    - id: request_parameter_tampering
+      labels:
+        - Threat
+        - RequestParameterTampering
+      properties:
+        kind: threat
+        id: request_parameter_tampering
+        name: Request Parameter Tampering
+        description: Modification of request parameters to alter application behavior
+
+    - id: data_tampering_at_rest
+      labels:
+        - Threat
+        - DataTamperingAtRest
+      properties:
+        kind: threat
+        id: data_tampering_at_rest
+        name: Data Tampering at Rest
+        description: Unauthorized modification of stored data or configuration
+
+    - id: mitm_data_modification
+      labels:
+        - Threat
+        - ManInTheMiddleDataModification
+      properties:
+        kind: threat
+        id: mitm_data_modification
+        name: Man-in-the-Middle Data Modification
+        description: Alteration of data in transit between components
+
+    - id: insufficient_logging
+      labels:
+        - Threat
+        - InsufficientLogging
+      properties:
+        kind: threat
+        id: insufficient_logging
+        name: Insufficient Logging
+        description: Actions are not logged, allowing users to deny activity
+
+    - id: log_tampering
+      labels:
+        - Threat
+        - LogTampering
+      properties:
+        kind: threat
+        id: log_tampering
+        name: Log Tampering
+        description: Modification or deletion of logs to remove evidence
+
+    - id: shared_credentials
+      labels:
+        - Threat
+        - SharedCredentials
+      properties:
+        kind: threat
+        id: shared_credentials
+        name: Shared Credentials
+        description: Multiple users share credentials, preventing accountability
+
+    - id: sensitive_data_exposure
+      labels:
+        - Threat
+        - SensitiveDataExposure
+      properties:
+        kind: threat
+        id: sensitive_data_exposure
+        name: Sensitive Data Exposure
+        description: Exposure of PII, secrets, or confidential information
+
+    - id: excessive_data_return
+      labels:
+        - Threat
+        - ExcessiveDataReturn
+      properties:
+        kind: threat
+        id: excessive_data_return
+        name: Excessive Data Return
+        description: APIs return more data than the requester is authorized to access
+
+    - id: insecure_direct_object_reference
+      labels:
+        - Threat
+        - InsecureDirectObjectReference
+      properties:
+        kind: threat
+        id: insecure_direct_object_reference
+        name: Insecure Direct Object Reference
+        description: Access to another user's data via predictable identifiers
+
+    - id: resource_exhaustion
+      labels:
+        - Threat
+        - ResourceExhaustion
+      properties:
+        kind: threat
+        id: resource_exhaustion
+        name: Resource Exhaustion
+        description: Exhaustion of CPU, memory, or disk causing service disruption
+
+    - id: application_level_dos
+      labels:
+        - Threat
+        - ApplicationLevelDoS
+      properties:
+        kind: threat
+        id: application_level_dos
+        name: Application-Level DoS
+        description: Abuse of expensive operations to degrade performance
+
+    - id: rate_limit_bypass
+      labels:
+        - Threat
+        - RateLimitBypass
+      properties:
+        kind: threat
+        id: rate_limit_bypass
+        name: Rate Limit Bypass
+        description: Circumventing rate limits to overwhelm the service
+
+    - id: broken_access_control
+      labels:
+        - Threat
+        - BrokenAccessControl
+      properties:
+        kind: threat
+        id: broken_access_control
+        name: Broken Access Control
+        description: Missing or incorrect authorization checks
+
+    - id: privilege_escalation
+      labels:
+        - Threat
+        - PrivilegeEscalation
+      properties:
+        kind: threat
+        id: privilege_escalation
+        name: Privilege Escalation
+        description: Gaining higher privileges than intended
+
+    - id: over_privileged_roles
+      labels:
+        - Threat
+        - OverPrivilegedRoles
+      properties:
+        kind: threat
+        id: over_privileged_roles
+        name: Over-Privileged Roles
+        description: Excessive permissions enable unauthorized actions
+
 
     # Controls
-    - id: db_user_authentication
-      labels: 
-        name: DB User Authentication
-      properties:
-        kind: control
-        id: db_user_authentication
-        name: DB User Authentication
-        category: authentication
-
-    - id: db_user_authorization
-      labels: 
-        name: DB User Authorization
-      properties:
-        kind: control
-        id: db_user_authorization
-        name: DB User Authorization
-        category: authorization
-
     - id: encrypt_data_at_rest
       labels: 
-        name: Encrypt Data at Rest
+        - Control
+        - EncryptDataAtRest
       properties:
         kind: control
         id: encrypt_data_at_rest
@@ -117,7 +369,8 @@
 
     - id: encrypt_data_in_transit
       labels: 
-        name: Encrypt Data in Transit
+        - Control
+        - EncryptDataInTransit
       properties:
         kind: control
         id: encrypt_data_in_transit
@@ -126,7 +379,8 @@
     
     - id: api_authentication
       labels: 
-        name: API Authentication
+        - Control
+        - APIAuthentication
       properties:
         kind: control
         id: api_authentication
@@ -135,17 +389,30 @@
 
     - id: api_authorization
       labels: 
-        name: API Authorization
+        - Control
+        - APIAuthorization
       properties:
         kind: control
         id: api_authorization
         name: API Authorization
         category: authorization
-
+    
+    - id: rbac
+      labels: 
+        - Control
+        - RoleBasedAccessControl
+      properties:
+        kind: control
+        id: rbac
+        name: Role Based Access Control
+        category: authorization
+    
+    
     # Control Conditions
     - id: resource_type_is_generic_api_service
       labels: 
-        name: Resource Type is Generic API Service
+        - ControlCondition
+        - ResourceTypeIsGenericAPIService
       properties:
         kind: control_condition
         id: resource_type_is_generic_api_service
@@ -155,7 +422,8 @@
 
     - id: generic_api_publicly_accessible
       labels: 
-        name: Generic API is Publicly Accessible
+        - ControlCondition
+        - GenericAPIIsPubliclyAccessible
       properties:
         kind: control_condition
         id: generic_api_publicly_accessible
@@ -163,69 +431,73 @@
         node.type: resource
         node.relation.of_type: generic_api_service
 
+    - id: resource_has_customer_pii_data_asset
+      labels: 
+        - ControlCondition
+        - ResourceHasCustomerPIIDataAsset
+      properties:
+        kind: control_condition
+        id: resource_has_customer_pii_data_asset
+        name: Resource has Customer PII Data Asset
+        node.type: resource
+        node.relation.has_asset: customer_pii
+    
+    
     # Control Rules
     - id: generic_api_publicly_accessible_rule
       labels: 
-        name: Generic API is Publicly Accessible Rule
+        - ControlRule
+        - GenericAPIIsPubliclyAccessibleRule
       properties:
         kind: control_rule
         id: generic_api_publicly_accessible_rule
         name: Generic API is Publicly Accessible Rule
+  
        
+    - id: generic_api_service_has_customer_pii_data
+      labels:
+        - ControlRule
+        - GenericAPIServiceHasCustomerPIIData
+      properties:
+        kind: control_rule
+        id: generic_api_service_has_customer_pii_data
+        name: Generic API Service has Customer PII Data
+
 
 
 
 
   relationships:
-    - id: plaid_accounts_api_to_cards_issuer_api
-      labels: 
-        name: Plaid Accounts API to Cards Issuer API
-      properties:
-        relation_type: talks_to
-      source_node_type: resource
-      source_node_id: plaid_accounts_api
-      target_node_type: resource
-      target_node_id: cards_issuer_api
-
-
-
-
-    - id: generic_api_publicly_accessible_rule_has_generic_api_publicly_accessible_condition
-      labels:
-        name: Generic API Publicly Accessible Rule has Generic API Publicly Accessible Condition
-      properties:
-        relation_type: has_control_condition
+    # Control Rule - When resource is of type generic api service and has customer pii data.
+    
+    ## Control Conditions
+    - relation_type: has_control_condition
       source_node_type: control_rule
-      source_node_id: generic_api_publicly_accessible_rule
+      source_node_id: generic_api_service_has_customer_pii_data
       target_node_type: control_condition
-      target_node_id: generic_api_publicly_accessible_condition
-
-    - id: generic_api_publicly_accessible_has_resource_type_is_generic_api_service_condition
-      labels:
-        name: Generic API Publicly Accessible has Resource Type is Generic API Service Condition
-      properties:
-        relation_type: has_control_condition
-      source_node_type: control_condition
-      source_node_id: generic_api_publicly_accessible_condition
-      target_node_type: control_condition
-      target_node_id: resource_type_is_generic_api_service_condition
-
-    - id: generic_api_publicly_accessible_enforces_api_authentication
-      labels:
-        name: Generic API Publicly Accessible enforces API Authentication
-      properties:
-        relation_type: enforces_control
+      target_node_id: resource_type_is_generic_api_service
+      
+    - relation_type: has_control_condition
       source_node_type: control_rule
-      source_node_id: generic_api_publicly_accessible_rule
+      source_node_id: generic_api_service_has_customer_pii_data
+      target_node_type: control_condition
+      target_node_id: resource_has_customer_pii_data_asset
+
+    ## Controls
+    - relation_type: requires_control
+      source_node_type: control_rule
+      source_node_id: generic_api_service_has_customer_pii_data
       target_node_type: control
       target_node_id: api_authentication
-
-    - id: generic_api_publicly_accessible_enforces_api_authorization
-      labels:
-        name: Generic API Publicly Accessible enforces API Authorization
-      properties:
-        relation_type: enforces_control
+    
+    - relation_type: requires_control
       source_node_type: control_rule
-      source_node_id: generic_api_publicly_accessible_rule
+      source_node_id: generic_api_service_has_customer_pii_data
       target_node_type: control
       target_node_id: api_authorization
+    
+    - relation_type: requires_control
+      source_node_type: control_rule
+      source_node_id: generic_api_service_has_customer_pii_data
+      target_node_type: control
+      target_node_id: rbac

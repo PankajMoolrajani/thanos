@@ -1,0 +1,316 @@
+schema:
+  metadata:
+    name: threat_model_graph
+    version: 1.0.0
+    neo4j_version: "5.x"
+    description: >
+      Graph schema for threat modeling, system resources,
+      security controls, and policy enforcement.
+    node_types: 
+      - Product
+      - Component
+      - Resource
+      - ResourceType                    # needed for init
+      - TrustZone
+      - ControlsCollection              # needed for init
+      - Control                         # needed for init
+      - ControlCondition                # needed for init
+      - ControlRule                     # needed for init
+
+      - Engagement
+      - DataFlow
+      - Asset                           # needed for init
+      - Actor                           # needed for init
+      - ThreatCategory                  # needed for init
+      - Threat                          # needed for init       
+      
+    
+    relation_types:
+      - HAS_COMPONENT                   # Product has Component
+      - HAS_RESOURCE                    # Component has Resource
+      - OF_RESOURCE_TYPE                # Resource is of Resource Type            
+      - TALKS_TO                        # Resource talks to Resource
+      - IN_TRUST_ZONE                   # Resource is in Trust Zone                   
+      - HAS_CONTROL                     # Control Collection has Control          # needed for init
+      - HAS_CONTROL_CONDITION           # Control Rule has Control Condition      # needed for init
+      - REQUIRES_CONTROL                # Control Rule requires Control           # needed for init
+      - HAS_THREAT                      # Threat Category has Threat              # needed for init
+      - HAS_ASSET                       # Resource has Asset
+      - MITIGATED_BY                    # Threat is mitigated by Control
+      - ASSESSES                        # Engagement assesses Resource
+     
+
+
+
+  node_types:
+    - id: product
+      name: Product
+      labels: [Product]
+      properties:
+        id:
+          type: string
+          required: true
+          constraints:
+            - type: unique
+            - type: exists
+        name:
+          type: string
+          required: true
+          constraints:
+            - type: exists
+
+    - id: component
+      name: Component
+      labels: [Component]
+      properties:
+        id:
+          type: string
+          required: true
+          constraints:
+            - type: unique
+            - type: exists
+        name:
+          type: string
+          required: true
+          constraints:
+            - type: exists
+
+    - id: resource
+      name: Resource
+      labels: [Resource]
+      properties:
+        id:
+          type: string
+          required: true
+          constraints:
+            - type: unique
+            - type: exists
+        name:
+          type: string
+          required: true
+          constraints:
+            - type: exists
+
+    - id: resource_type
+      name: Resource Type
+      labels: [Resource Type]
+      properties:
+        id:
+          type: string
+          required: true
+          constraints:
+            - type: unique
+            - type: exists
+        name:
+          type: string
+          required: true
+          constraints:
+            - type: exists
+
+    - id: trust_zone
+      name: Trust Zone
+      labels: [Trust Zone]
+      properties:
+        id:
+          type: string
+          required: true
+          constraints:
+            - type: unique
+            - type: exists
+        name:
+          type: string
+          required: true
+          constraints:
+            - type: exists
+
+    - id: controls_collection
+      name: Controls Collection
+      labels: [Controls Collection]
+      properties:
+        id:
+          type: string
+          required: true
+          constraints:
+            - type: unique
+            - type: exists
+        name:
+          type: string
+          required: true
+          constraints:
+            - type: exists
+    
+    - id: control
+      name: Control
+      labels: [Control]
+      properties:
+        id:
+          type: string
+          required: true
+          constraints:
+            - type: unique
+            - type: exists
+        name:
+          type: string
+          required: true
+          constraints:
+            - type: exists
+  
+    - id: control_condition
+      name: Control Condition
+      labels: [Control Condition]
+      properties:
+        id:
+          type: string
+          required: true
+          constraints:
+            - type: unique
+            - type: exists
+        name:
+          type: string
+          required: true
+          constraints:
+            - type: exists
+  
+    - id: control_rule
+      name: Control Rule
+      labels: [Control Rule]
+      properties:
+        id:
+          type: string
+          required: true
+          constraints:
+            - type: unique
+            - type: exists
+        name:
+          type: string
+          required: true
+          constraints:
+            - type: exists
+  
+    - id: threat_category
+      name: Threat Category
+      labels: [Threat Category]
+      properties:
+        id:
+          type: string
+          required: true
+          constraints:
+            - type: unique
+            - type: exists
+        name:
+          type: string
+          required: true
+          constraints:
+            - type: exists
+  
+    - id: threat
+      name: Threat
+      labels: [Threat]
+      properties:
+        id:
+          type: string
+          required: true
+          constraints:
+            - type: unique
+            - type: exists  
+        name:
+          type: string
+          required: true
+          constraints:
+            - type: exists
+
+    - id: asset
+      name: Asset
+      labels: [Asset]
+      properties:
+        id:
+          type: string
+          required: true
+          constraints:
+            - type: unique
+            - type: exists
+        name:
+          type: string
+          required: true
+          constraints:
+            - type: exists
+
+  relationships:
+    TALKS_TO:
+      type: TALKS_TO
+      from: Resource
+      to: Resource
+      direction: OUTGOING
+      description: Network or logical communication path
+
+      properties:
+        protocol:
+          type: enum
+          values: [http, https, grpc]
+          constraints:
+            - type: exists
+
+        port:
+          type: integer
+
+        authenticated:
+          type: boolean
+          indexes:
+            - type: range
+
+    REQUIRES_CONTROL:
+      type: REQUIRES_CONTROL
+      from: Resource
+      to: Control
+      direction: OUTGOING
+      description: Resource must implement a security control
+
+      properties:
+        enforced:
+          type: boolean
+          constraints:
+            - type: exists
+
+        reason:
+          type: string
+
+    MITIGATES:
+      type: MITIGATES
+      from: Control
+      to: Threat
+      direction: OUTGOING
+      description: Control mitigates a threat
+
+    DEPENDS_ON:
+      type: DEPENDS_ON
+      from: Resource
+      to: Resource
+      direction: OUTGOING
+      description: Resource dependency
+
+      constraints:
+        - type: relationship_unique
+          properties: [from.id, to.id]
+
+      properties:
+        dependency_type:
+          type: enum
+          values: [runtime, buildtime]
+
+  rules:
+    - id: public_api_requires_auth
+      description: Public APIs must require authentication
+
+      when:
+        node:
+          label: Resource
+          conditions:
+            resource_type: api
+            is_publicly_accessible: true
+
+      then:
+        require_relationship:
+          type: REQUIRES_CONTROL
+          target_label: Control
+          target_conditions:
+            control_type: authentication

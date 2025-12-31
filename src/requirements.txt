@@ -2,3 +2,4 @@ sqlalchemy
 pyyaml
 uuid
 streamlit
+neo4j
