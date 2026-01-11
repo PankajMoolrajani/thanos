@@ -1,0 +1,71 @@
+nodes: 
+  # Resource Types
+  - id: generic_api
+    kind: resource_type
+    name: Generic API
+    category: api
+    provider: generic
+    config_publicly_accessible: 
+      type: boolean
+      default: true
+
+  - id: generic_database
+    kind: resource_type
+    name: Generic Database
+    category: database
+    provider: generic
+
+  - id: generic_secret_store
+    kind: resource_type
+    name: Generic Secret Store
+    category: secret_store
+    provider: generic
+
+  - id: generic_file_storage
+    kind: resource_type
+    name: Generic File Storage
+    category: file_storage
+    provider: generic
+
+  # Controls
+  - id: api_authentication
+    kind: control
+    name: API Authentication
+    category: authentication
+  
+  - id: api_authorization
+    kind: control
+    name: API Authorization
+    category: authorization
+
+  - id: resource_type_is_generic_api
+    kind: control_condition
+    name: Resource Type is Generic API
+    category: api
+    provider: generic
+
+  # Control Conditions
+  - id: resource_type_is_generic_api
+    kind: control_condition
+    name: Resource Type is Generic API
+    condition: 
+      node.type: resource
+      node.relation.of_type: generic_api
+  
+  - id: is_publicly_accessible
+    kind: control_condition
+    name: Is Publicly Accessible
+    condition: 
+      node.property.key: config_publicly_accessible
+      node.property.value: true
+
+  # Control Rules
+  - id: generic_api_publicly_accessible_rule
+    kind: control_rule
+    name: Generic API is Publicly Accessible
+    conditions: 
+      - resource_type_is_generic_api
+      - is_publicly_accessible
+    controls:
+      - api_authentication
+      - api_authorization
