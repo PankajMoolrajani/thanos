@@ -2,7 +2,8 @@ import yaml
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
-from schema import ComponentType, ControlsCollection, Control, ThreatModel, init_db
+from schema import (ComponentType, ControlsCollection, Control, ThreatModel, 
+                    ThreatCategory, Threat, Component, ThreatModelComponent, init_db)
 import argparse
 
 def load_default_data(yaml_file_path):
@@ -43,7 +44,15 @@ def load_default_data(yaml_file_path):
                 record = Control(
                     id=item['id'],
                     name=item['name'],
-                    question=item['question']
+                    question=item.get('question')
+                )
+                session.add(record)
+            
+            elif item['kind'] == 'component':
+                record = Component(
+                    id=item['id'],
+                    name=item['name'],
+                    component_type_id=item['component_type_id']
                 )
                 session.add(record)
             
@@ -51,7 +60,24 @@ def load_default_data(yaml_file_path):
                 record = ThreatModel(
                     id=item['id'],
                     name=item['name'],
-                    description=item['description']
+                    description=item.get('description')
+                )
+                session.add(record)
+            
+            elif item['kind'] == 'threat_category':
+                record = ThreatCategory(
+                    id=item['id'],
+                    name=item['name'],
+                    description=item.get('description')
+                )
+                session.add(record)
+            
+            elif item['kind'] == 'threat':
+                record = Threat(
+                    id=item['id'],
+                    name=item['name'],
+                    description=item.get('description'),
+                    threat_category_id=item.get('threat_category_id')
                 )
                 session.add(record)
 
@@ -62,6 +88,36 @@ def load_default_data(yaml_file_path):
             # Skip duplicate records
             session.rollback()
             continue
+    
+    # Second pass: link components to threat models
+    # This must be done after all nodes are created
+    for item in data['nodes']:
+        if item['kind'] == 'component':
+            try:
+                # Find the first threat_model in the file (convention)
+                threat_model_id = None
+                for node in data['nodes']:
+                    if node['kind'] == 'threat_model':
+                        threat_model_id = node['id']
+                        break
+                
+                if threat_model_id:
+                    # Check if link already exists
+                    existing = session.query(ThreatModelComponent).filter(
+                        ThreatModelComponent.threat_model_id == threat_model_id,
+                        ThreatModelComponent.component_id == item['id']
+                    ).first()
+                    
+                    if not existing:
+                        link = ThreatModelComponent(
+                            threat_model_id=threat_model_id,
+                            component_id=item['id']
+                        )
+                        session.add(link)
+                        session.commit()
+            except IntegrityError:
+                session.rollback()
+                continue
 
     session.close()
 

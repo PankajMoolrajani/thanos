@@ -9,12 +9,15 @@ RUN apt-get update && \
 
 # Set working directory
 WORKDIR /app
+
 # Copy application files
 COPY . /app/
 
 # Install Python dependencies
-RUN pip3 install -r requirements.txt
+RUN pip3 install -r src/requirements.txt --break-system-packages
 
+# Expose Streamlit port
+EXPOSE 8501
 
-# Default command
-CMD ["/bin/sleep", "21600"]
+# Default command - run Streamlit app
+CMD ["streamlit", "run", "src/streamlit_app/app.py", "--server.address", "0.0.0.0"]

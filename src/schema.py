@@ -50,10 +50,12 @@ class Control(Base):
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     name = Column(String, nullable=False)
+    question = Column(String)
 
     controls_collections_controls = relationship("ControlsCollectionsControls", back_populates="control")
     rule_controls = relationship("ControlRuleControl", back_populates="control")
     control_values = relationship("ComponentControlValue", back_populates="control")
+    threat_mitigations = relationship("ThreatControlMitigation", back_populates="control")
 
 class ControlCondition(Base):
     __tablename__ = 'control_conditions'
@@ -123,6 +125,35 @@ class ThreatModelComponent(Base):
 
     threat_model = relationship("ThreatModel", back_populates="threat_model_components")
     component = relationship("Component", back_populates="threat_model_components")
+
+class ThreatCategory(Base):
+    __tablename__ = 'threat_categories'
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String, nullable=False)
+    description = Column(String)
+
+    threats = relationship("Threat", back_populates="threat_category")
+
+class Threat(Base):
+    __tablename__ = 'threats'
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String, nullable=False)
+    description = Column(String)
+    threat_category_id = Column(String(36), ForeignKey('threat_categories.id'))
+
+    threat_category = relationship("ThreatCategory", back_populates="threats")
+    control_mitigations = relationship("ThreatControlMitigation", back_populates="threat")
+
+class ThreatControlMitigation(Base):
+    __tablename__ = 'threat_control_mitigations'
+
+    threat_id = Column(String(36), ForeignKey('threats.id'), primary_key=True)
+    control_id = Column(String(36), ForeignKey('controls.id'), primary_key=True)
+
+    threat = relationship("Threat", back_populates="control_mitigations")
+    control = relationship("Control", back_populates="threat_mitigations")
 
 def init_db(db_url='sqlite:///thanos.db'):
     engine = create_engine(db_url)
