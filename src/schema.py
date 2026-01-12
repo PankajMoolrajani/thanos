@@ -124,6 +124,35 @@ class ThreatModelComponent(Base):
     threat_model = relationship("ThreatModel", back_populates="threat_model_components")
     component = relationship("Component", back_populates="threat_model_components")
 
+class ThreatCategory(Base):
+    __tablename__ = 'threat_categories'
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String, nullable=False)
+    description = Column(String)
+
+    threats = relationship("Threat", back_populates="threat_category")
+
+class Threat(Base):
+    __tablename__ = 'threats'
+
+    id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    name = Column(String, nullable=False)
+    description = Column(String)
+    threat_category_id = Column(String(36), ForeignKey('threat_categories.id'))
+
+    threat_category = relationship("ThreatCategory", back_populates="threats")
+    control_mitigations = relationship("ThreatControlMitigation", back_populates="threat")
+
+class ThreatControlMitigation(Base):
+    __tablename__ = 'threat_control_mitigations'
+
+    threat_id = Column(String(36), ForeignKey('threats.id'), primary_key=True)
+    control_id = Column(String(36), ForeignKey('controls.id'), primary_key=True)
+
+    threat = relationship("Threat", back_populates="control_mitigations")
+    control = relationship("Control")
+
 def init_db(db_url='sqlite:///thanos.db'):
     engine = create_engine(db_url)
     Base.metadata.create_all(engine)

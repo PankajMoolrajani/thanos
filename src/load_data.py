@@ -2,7 +2,7 @@ import yaml
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import IntegrityError
-from schema import ComponentType, ControlsCollection, Control, ThreatModel, init_db
+from schema import ComponentType, ControlsCollection, Control, ThreatModel, ThreatCategory, Threat, init_db
 import argparse
 
 def load_default_data(yaml_file_path):
@@ -43,7 +43,7 @@ def load_default_data(yaml_file_path):
                 record = Control(
                     id=item['id'],
                     name=item['name'],
-                    question=item['question']
+                    question=item.get('question', '')
                 )
                 session.add(record)
             
@@ -52,6 +52,23 @@ def load_default_data(yaml_file_path):
                     id=item['id'],
                     name=item['name'],
                     description=item['description']
+                )
+                session.add(record)
+            
+            elif item['kind'] == 'threat_category':
+                record = ThreatCategory(
+                    id=item['id'],
+                    name=item['name'],
+                    description=item.get('description', '')
+                )
+                session.add(record)
+            
+            elif item['kind'] == 'threat':
+                record = Threat(
+                    id=item['id'],
+                    name=item['name'],
+                    description=item.get('description', ''),
+                    threat_category_id=item.get('threat_category_id', None)
                 )
                 session.add(record)
 
