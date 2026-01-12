@@ -38,6 +38,26 @@ Thanos enables security professionals and development teams to:
 
 #### Option 1: Local Installation
 
+#### Quick Start (Recommended)
+
+Use the automated setup script:
+
+```bash
+git clone https://github.com/PankajMoolrajani/thanos.git
+cd thanos
+chmod +x quickstart.sh
+./quickstart.sh
+```
+
+This will:
+- Initialize the database
+- Load default component types and controls
+- Load STRIDE threat categories
+- Load example threat models
+- Start the web interface at `http://localhost:8501`
+
+#### Manual Installation
+
 1. Clone the repository:
 ```bash
 git clone https://github.com/PankajMoolrajani/thanos.git
@@ -54,6 +74,7 @@ pip install -r requirements.txt
 ```bash
 python load_data.py -f data/default.yaml
 python load_data.py -f data/init/controls.yaml
+python load_data.py -f data/examples/ecommerce_platform.tm.yaml  # Optional
 ```
 
 4. Run the Streamlit application:
