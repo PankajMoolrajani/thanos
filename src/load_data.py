@@ -44,7 +44,7 @@ def load_default_data(yaml_file_path):
                 record = Control(
                     id=item['id'],
                     name=item['name'],
-                    question=item.get('question', None)
+                    question=item.get('question')
                 )
                 session.add(record)
             
@@ -60,7 +60,7 @@ def load_default_data(yaml_file_path):
                 record = ThreatModel(
                     id=item['id'],
                     name=item['name'],
-                    description=item.get('description', '')
+                    description=item.get('description')
                 )
                 session.add(record)
             
@@ -68,7 +68,7 @@ def load_default_data(yaml_file_path):
                 record = ThreatCategory(
                     id=item['id'],
                     name=item['name'],
-                    description=item.get('description', '')
+                    description=item.get('description')
                 )
                 session.add(record)
             
@@ -76,8 +76,8 @@ def load_default_data(yaml_file_path):
                 record = Threat(
                     id=item['id'],
                     name=item['name'],
-                    description=item.get('description', ''),
-                    threat_category_id=item.get('threat_category_id', None)
+                    description=item.get('description'),
+                    threat_category_id=item.get('threat_category_id')
                 )
                 session.add(record)
 

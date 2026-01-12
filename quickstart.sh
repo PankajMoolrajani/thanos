@@ -18,10 +18,9 @@ cd src
 
 # Initialize database
 echo "📦 Initializing database..."
-if ! python3 -c "from schema import init_db; init_db()" 2>&1 | tee /tmp/thanos_init.log > /dev/null; then
-    echo "❌ Failed to initialize database"
-    echo "   Error details:"
-    cat /tmp/thanos_init.log
+if ! python3 -c "from schema import init_db; init_db()" 2>&1; then
+    echo ""
+    echo "❌ Failed to initialize database (see error above)"
     exit 1
 fi
 
