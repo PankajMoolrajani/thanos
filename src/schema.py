@@ -55,6 +55,7 @@ class Control(Base):
     controls_collections_controls = relationship("ControlsCollectionsControls", back_populates="control")
     rule_controls = relationship("ControlRuleControl", back_populates="control")
     control_values = relationship("ComponentControlValue", back_populates="control")
+    threat_mitigations = relationship("ThreatControlMitigation", back_populates="control")
 
 class ControlCondition(Base):
     __tablename__ = 'control_conditions'
@@ -152,7 +153,7 @@ class ThreatControlMitigation(Base):
     control_id = Column(String(36), ForeignKey('controls.id'), primary_key=True)
 
     threat = relationship("Threat", back_populates="control_mitigations")
-    control = relationship("Control")
+    control = relationship("Control", back_populates="threat_mitigations")
 
 def init_db(db_url='sqlite:///thanos.db'):
     engine = create_engine(db_url)

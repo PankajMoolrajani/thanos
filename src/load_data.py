@@ -44,7 +44,7 @@ def load_default_data(yaml_file_path):
                 record = Control(
                     id=item['id'],
                     name=item['name'],
-                    question=item.get('question', '')
+                    question=item.get('question', None)
                 )
                 session.add(record)
             

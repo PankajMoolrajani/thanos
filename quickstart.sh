@@ -18,10 +18,12 @@ cd src
 
 # Initialize database
 echo "📦 Initializing database..."
-python3 -c "from schema import init_db; init_db()" 2>/dev/null || {
+if ! python3 -c "from schema import init_db; init_db()" 2>&1 | tee /tmp/thanos_init.log > /dev/null; then
     echo "❌ Failed to initialize database"
+    echo "   Error details:"
+    cat /tmp/thanos_init.log
     exit 1
-}
+fi
 
 # Load default data
 echo "📥 Loading default component types and controls..."
