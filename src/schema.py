@@ -50,6 +50,7 @@ class Control(Base):
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     name = Column(String, nullable=False)
+    question = Column(String)
 
     controls_collections_controls = relationship("ControlsCollectionsControls", back_populates="control")
     rule_controls = relationship("ControlRuleControl", back_populates="control")

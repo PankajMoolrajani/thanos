@@ -1,0 +1,56 @@
+nodes:
+  # Threat Model
+  - kind: threat_model
+    id: ecommerce_platform
+    name: E-Commerce Platform
+    description: |
+      Complete threat model for a modern e-commerce platform including
+      web frontend, API services, databases, and third-party integrations.
+      This example demonstrates how to model a realistic system with
+      multiple components and security controls.
+  
+  # Components
+  - kind: component
+    id: web_frontend
+    name: Web Frontend (React SPA)
+    component_type_id: webapp
+  
+  - kind: component
+    id: api_gateway
+    name: API Gateway
+    component_type_id: webapp
+  
+  - kind: component
+    id: user_database
+    name: User Database (PostgreSQL)
+    component_type_id: s3_bucket
+  
+  - kind: component
+    id: product_database
+    name: Product Catalog Database
+    component_type_id: s3_bucket
+  
+  - kind: component
+    id: order_service
+    name: Order Processing Service
+    component_type_id: webapp
+  
+  - kind: component
+    id: payment_processor
+    name: Stripe Payment Gateway
+    component_type_id: 3rd_party_api
+  
+  - kind: component
+    id: email_service
+    name: SendGrid Email Service
+    component_type_id: saas
+  
+  - kind: component
+    id: cdn_storage
+    name: CloudFront CDN & S3 Static Assets
+    component_type_id: s3_bucket
+  
+  - kind: component
+    id: analytics_service
+    name: Google Analytics
+    component_type_id: 3rd_party_api
