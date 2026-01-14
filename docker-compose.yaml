@@ -7,12 +7,35 @@ services:
       dockerfile: Dockerfile
     volumes:
       - .:/app
+      - sqlite_data:/app/data/db  # Persist SQLite database
     container_name: thanos
     restart: unless-stopped
     environment:
       - NODE_ENV=development
+      # Neo4j connection - points to local container
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=thanos_password
+      # SQLite database path
+      - DATABASE_URL=sqlite:///data/db/thanos.db
     ports:
       - "8501:8501"
+    depends_on:
+      - neo4j
+
+  neo4j:
+    image: neo4j:5-community
+    container_name: thanos_neo4j
+    restart: unless-stopped
+    environment:
+      - NEO4J_AUTH=neo4j/thanos123
+      - NEO4J_PLUGINS=["apoc"]
+    ports:
+      - "7474:7474"  # HTTP browser interface
+      - "7687:7687"  # Bolt protocol
+    volumes:
+      - neo4j_data:/data
+      - neo4j_logs:/logs
 
   # appsmith:
   #   image: appsmith/appsmith-ce
@@ -27,3 +50,8 @@ services:
   #   # Default credentials:
   #   # username: admin@example.com
   #   # password: password
+
+volumes:
+  neo4j_data:
+  neo4j_logs:
+  sqlite_data:

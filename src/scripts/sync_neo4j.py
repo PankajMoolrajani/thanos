@@ -13,10 +13,12 @@ import yaml
 from neo4j import GraphDatabase
 
 
-# Neo4j connection configuration - can be overridden via environment variables
-NEO4J_URI = os.getenv("NEO4J_URI", "neo4j+s://8de1e845.databases.neo4j.io:7687")
+# Neo4j connection configuration - uses environment variables for local/cloud flexibility
+# For local development (Docker): NEO4J_URI=bolt://neo4j:7687
+# For cloud: Set the appropriate cloud URI
+NEO4J_URI = os.getenv("NEO4J_URI", "bolt://localhost:7687")
 NEO4J_USER = os.getenv("NEO4J_USER", "neo4j")
-NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "upQcrA3r8XsnVitUjHjRl6mWSp43aou5NI3HvAz8Q40")
+NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD", "thanos_password")
 
 def get_args(): 
     parser = argparse.ArgumentParser(description='Sync YAML data to Neo4j database.')
@@ -123,7 +125,6 @@ def check_if_relationship_exists(relationship):
 def create_relationship(relationship):
     print (f"CREATING RELATIONSHIP {relationship['source_node_id']} -> {relationship['target_node_id']} ({relationship['relation_type']})")
     neo4j_client = get_neo4j_client()
-    
     # Build the query to match source and target nodes, then merge the relationship
     query = f"""
         MATCH (source {{id: '{relationship['source_node_id']}'}})
