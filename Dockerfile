@@ -19,5 +19,10 @@ RUN pip3 install -r src/requirements.txt --break-system-packages
 # Expose Streamlit port
 EXPOSE 8501
 
+# pip install wowbits-cli
+# COPY thanos_agent.yaml /app/wowbits/agents/thanos.yaml
+# wowbits create agent --name thanos --file /app/wowbits/agents/thanos.yaml
+# wowbits run agent --name thanos
+
 # Default command - run Streamlit app
 CMD ["streamlit", "run", "src/streamlit_app/app.py", "--server.address", "0.0.0.0"]
